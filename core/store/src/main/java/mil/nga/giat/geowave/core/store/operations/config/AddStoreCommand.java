@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.shaded.restlet.representation.Representation;
+import org.shaded.restlet.data.Form;
 import org.shaded.restlet.data.Status;
 import org.shaded.restlet.resource.Post;
 import org.shaded.restlet.resource.ServerResource;
@@ -148,9 +150,13 @@ public class AddStoreCommand extends
 	}
 
 	@Post("json")
-	public void restPost() {
+	public void restPost(
+			Representation entity ) {
 
-		String name = getQueryValue("name");
+		Form form = new Form(entity);
+		String name = form.getFirstValue("name");
+
+		// String name = getQueryValue("name");
 		if (name == null) {
 			this.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return;
