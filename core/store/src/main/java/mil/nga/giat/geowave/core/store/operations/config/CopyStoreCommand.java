@@ -130,12 +130,10 @@ public class CopyStoreCommand extends
 		String newname = form.getFirstValue("newname");
 		String isdefault = form.getFirstValue("default");
 
-		if (name == null) {
-			this.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return;
-		}
-		if (newname == null) {
-			this.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		if (name == null || newname == null) {
+			this.setStatus(
+					Status.CLIENT_ERROR_BAD_REQUEST,
+					"Requires: <name> <newname>");
 			return;
 		}
 		parameters.add(name);

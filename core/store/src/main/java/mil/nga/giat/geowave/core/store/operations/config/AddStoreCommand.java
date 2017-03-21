@@ -167,7 +167,9 @@ public class AddStoreCommand extends
 		String isdefault = form.getFirstValue("default");
 
 		if (name == null || type == null) {
-			this.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			this.setStatus(
+					Status.CLIENT_ERROR_BAD_REQUEST,
+					"Requires: name and store type");
 			return;
 		}
 		parameters.add(name);
