@@ -35,18 +35,22 @@ import java.util.Properties;
 
 public class RestServerTest
 {
+
 	@BeforeClass
 	public static void runServer() {
 		RestServer.main(new String[] {});
+
 	}
 
-	@After
-	public void after() {
+	@Before
+	public void before()
+			throws IOException {
 		File propfile = ConfigOptions.getDefaultPropertyFile();
 		// clean the content of the default property file
-		// if (propfile.exists()) {
-		// propfile.delete();
-		// }
+		if (propfile.exists()) {
+			propfile.delete();
+			propfile.createNewFile();
+		}
 	}
 
 	// Tests geowave/config/set and list
@@ -128,7 +132,7 @@ public class RestServerTest
 			throws ResourceException,
 			IOException {
 
-		// create a new store named "store1", with type "hbase"
+		// create a new store named "store1", with type "memory"
 		ClientResource resourceAdd = new ClientResource(
 				"http://localhost:5152/geowave/config/addstore");
 		Form formAdd = new Form();
@@ -137,7 +141,7 @@ public class RestServerTest
 				"store1");
 		formAdd.add(
 				"storetype",
-				"hbase");
+				"memory");
 		formAdd.add(
 				"default",
 				"true");

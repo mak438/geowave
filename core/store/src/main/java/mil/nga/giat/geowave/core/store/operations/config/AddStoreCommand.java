@@ -22,7 +22,6 @@ import mil.nga.giat.geowave.core.cli.annotations.GeowaveOperation;
 import mil.nga.giat.geowave.core.cli.api.Command;
 import mil.nga.giat.geowave.core.cli.api.DefaultOperation;
 import mil.nga.giat.geowave.core.cli.api.OperationParams;
-//import mil.nga.giat.geowave.core.cli.api.ServerResource;
 import mil.nga.giat.geowave.core.cli.operations.config.ConfigSection;
 import mil.nga.giat.geowave.core.cli.operations.config.options.ConfigOptions;
 import mil.nga.giat.geowave.core.cli.parser.ManualOperationParams;
@@ -30,12 +29,12 @@ import mil.nga.giat.geowave.core.store.GeoWaveStoreFinder;
 import mil.nga.giat.geowave.core.store.StoreFactoryOptions;
 import mil.nga.giat.geowave.core.store.memory.MemoryRequiredOptions;
 import mil.nga.giat.geowave.core.store.memory.MemoryStoreFactoryFamily;
-import mil.nga.giat.geowave.datastore.hbase.HBaseStoreFactoryFamily;
-import mil.nga.giat.geowave.datastore.hbase.operations.config.HBaseRequiredOptions;
-import mil.nga.giat.geowave.datastore.bigtable.BigTableStoreFactoryFamily;
-import mil.nga.giat.geowave.datastore.bigtable.operations.config.BigTableOptions;
-import mil.nga.giat.geowave.datastore.accumulo.AccumuloStoreFactoryFamily;
-import mil.nga.giat.geowave.datastore.accumulo.operations.config.AccumuloRequiredOptions;
+//import mil.nga.giat.geowave.datastore.hbase.HBaseStoreFactoryFamily;
+//import mil.nga.giat.geowave.datastore.hbase.operations.config.HBaseRequiredOptions;
+//import mil.nga.giat.geowave.datastore.bigtable.BigTableStoreFactoryFamily;
+//import mil.nga.giat.geowave.datastore.bigtable.operations.config.BigTableOptions;
+//import mil.nga.giat.geowave.datastore.accumulo.AccumuloStoreFactoryFamily;
+//import mil.nga.giat.geowave.datastore.accumulo.operations.config.AccumuloRequiredOptions;
 import mil.nga.giat.geowave.core.store.operations.remote.options.DataStorePluginOptions;
 
 @GeowaveOperation(name = "addstore", parentOperation = ConfigSection.class)
@@ -183,21 +182,21 @@ public class AddStoreCommand extends
 					storeType,
 					new MemoryStoreFactoryFamily());
 		}
-		else if (storeType.equals("hbase")) {
-			GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
-					storeType,
-					new HBaseStoreFactoryFamily());
-		}
-		else if (storeType.equals("accumulo")) {
-			GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
-					storeType,
-					new AccumuloStoreFactoryFamily());
-		}
-		else if (storeType.equals("bigtable")) {
-			GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
-					storeType,
-					new BigTableStoreFactoryFamily());
-		}
+		// else if (storeType.equals("hbase")) {
+		// GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
+		// storeType,
+		// new HBaseStoreFactoryFamily());
+		// }
+		// else if (storeType.equals("accumulo")) {
+		// GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
+		// storeType,
+		// new AccumuloStoreFactoryFamily());
+		// }
+		// else if (storeType.equals("bigtable")) {
+		// GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
+		// storeType,
+		// new BigTableStoreFactoryFamily());
+		// }
 		else {
 			this.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return;
@@ -210,19 +209,17 @@ public class AddStoreCommand extends
 
 		prepare(params);
 
-		final StoreFactoryOptions opts;
-		if (storeType.equals("memory")) {
-			opts = (MemoryRequiredOptions) pluginOptions.getFactoryOptions();
-		}
-		else if (storeType.equals("hbase")) {
-			opts = (HBaseRequiredOptions) pluginOptions.getFactoryOptions();
-		}
-		else if (storeType.equals("accumulo")) {
-			opts = (AccumuloRequiredOptions) pluginOptions.getFactoryOptions();
-		}
-		else { // storeType is "bigtable"
-			opts = (BigTableOptions) pluginOptions.getFactoryOptions();
-		}
+		// storeType.equals("memory")
+		final StoreFactoryOptions opts = (MemoryRequiredOptions) pluginOptions.getFactoryOptions();
+		// else if (storeType.equals("hbase")) {
+		// opts = (HBaseRequiredOptions) pluginOptions.getFactoryOptions();
+		// }
+		// else if (storeType.equals("accumulo")) {
+		// opts = (AccumuloRequiredOptions) pluginOptions.getFactoryOptions();
+		// }
+		// else { // storeType is "bigtable"
+		// opts = (BigTableOptions) pluginOptions.getFactoryOptions();
+		// }
 		opts.setGeowaveNamespace("namespace");
 		computeResults(params);
 	}
