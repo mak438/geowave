@@ -12,7 +12,9 @@ import org.json.simple.parser.ParseException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.shaded.restlet.Context;
 import org.restlet.ext.json.JsonRepresentation;
 import org.shaded.restlet.resource.ResourceException;
@@ -42,17 +44,6 @@ public class RestServerTest
 
 	}
 
-	@Before
-	public void before()
-			throws IOException {
-		File propfile = ConfigOptions.getDefaultPropertyFile();
-		// clean the content of the default property file
-		if (propfile.exists()) {
-			propfile.delete();
-		}
-		propfile.createNewFile();
-	}
-
 	// Tests geowave/config/set and list
 	@Test
 	public void geowave_config_set_list()
@@ -60,7 +51,7 @@ public class RestServerTest
 			IOException,
 			ParseException {
 
-		// create a new store named "store", with type "memory"
+		// create a new store named "store1", with type "memory"
 		ClientResource resourceAdd = new ClientResource(
 				"http://localhost:5152/geowave/config/addstore");
 		Form formAdd = new Form();
@@ -124,6 +115,17 @@ public class RestServerTest
 		assertTrue(
 				"'name' is 'value'",
 				name.equals("store2"));
+
+		// remove the store named "store1"
+		ClientResource resourceRm = new ClientResource(
+				"http://localhost:5152/geowave/config/rmstore");
+		Form formRm = new Form();
+		formRm.add(
+				"name",
+				"store1");
+		resourceRm.post(
+				formRm).write(
+				System.out);
 	}
 
 	// Tests geowave/config/addstore, cpstore, rmstore
