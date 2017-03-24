@@ -49,8 +49,8 @@ public class RestServerTest
 		// clean the content of the default property file
 		if (propfile.exists()) {
 			propfile.delete();
-			propfile.createNewFile();
 		}
+		propfile.createNewFile();
 	}
 
 	// Tests geowave/config/set and list
