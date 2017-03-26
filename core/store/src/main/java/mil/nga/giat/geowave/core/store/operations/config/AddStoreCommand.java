@@ -1,6 +1,7 @@
 package mil.nga.giat.geowave.core.store.operations.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -118,13 +119,18 @@ public class AddStoreCommand extends
 
 		File propFile = (File) params.getContext().get(
 				ConfigOptions.PROPERTIES_FILE_CONTEXT);
-		boolean t = propFile.createNewFile();
-		System.out.println("file exist: "+t);
+		boolean t = false;
+		try {
+			t = propFile.createNewFile();
+		}
+		catch (IOException e) {}
+
+		System.out.println("file exist: " + t);
 		System.out.println("Path: " + propFile.getAbsolutePath());
 		Properties existingProps = ConfigOptions.loadProperties(
 				propFile,
 				null);
-		System.out.println("existingProps2: "+existingProps);
+		System.out.println("existingProps2: " + existingProps);
 
 		// Ensure that a name is chosen.
 		if (parameters.size() != 1) {
