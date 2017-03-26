@@ -244,10 +244,11 @@ public class ConfigOptions
 				}
 			}
 			else {
+				System.out.println("inside else");
 				is = new FileInputStream(
 						configFile);
+				System.out.println("else end");
 			}
-
 			System.out.println("properties1: "+properties);
 			properties.load(is);
 		}
