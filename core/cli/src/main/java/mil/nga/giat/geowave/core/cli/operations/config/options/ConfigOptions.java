@@ -248,12 +248,14 @@ public class ConfigOptions
 						configFile);
 			}
 
+			System.out.println("properties1: "+properties);
 			properties.load(is);
 		}
 		catch (final IOException e) {
 			LOGGER.error(
 					"Could not find property cache file: " + configFile,
 					e);
+			System.out.println("inside catch");
 
 			return null;
 		}

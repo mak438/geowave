@@ -122,7 +122,6 @@ public class AddStoreCommand extends
 		Properties existingProps = ConfigOptions.loadProperties(
 				propFile,
 				null);
-		System.out.println("existingProps: "+existingProps==null);
 		System.out.println("existingProps2: "+existingProps);
 
 		// Ensure that a name is chosen.
@@ -133,7 +132,6 @@ public class AddStoreCommand extends
 
 		// Make sure we're not already in the index.
 		DataStorePluginOptions existingOptions = new DataStorePluginOptions();
-		System.out.println("namespace: "+getNamespace());
 		if (existingOptions.load(
 				existingProps,
 				getNamespace())) {
