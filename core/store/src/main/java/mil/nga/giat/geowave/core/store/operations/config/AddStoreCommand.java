@@ -122,6 +122,7 @@ public class AddStoreCommand extends
 		Properties existingProps = ConfigOptions.loadProperties(
 				propFile,
 				null);
+		System.out.println("existingProps: "+existingProps==null);
 
 		// Ensure that a name is chosen.
 		if (parameters.size() != 1) {
