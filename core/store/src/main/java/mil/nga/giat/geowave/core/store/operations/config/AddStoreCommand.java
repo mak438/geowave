@@ -119,13 +119,7 @@ public class AddStoreCommand extends
 
 		File propFile = (File) params.getContext().get(
 				ConfigOptions.PROPERTIES_FILE_CONTEXT);
-		boolean t = false;
-		try {
-			t = propFile.createNewFile();
-		}
-		catch (IOException e) {}
-
-		System.out.println("file exist: " + t);
+		System.out.println("write: " + propFile.canWrite());
 		System.out.println("Path: " + propFile.getAbsolutePath());
 		Properties existingProps = ConfigOptions.loadProperties(
 				propFile,

@@ -249,7 +249,6 @@ public class ConfigOptions
 						configFile);
 				System.out.println("else end");
 			}
-			System.out.println("properties1: "+properties);
 			properties.load(is);
 		}
 		catch (final IOException e) {
