@@ -129,6 +129,9 @@ public class CopyStoreCommand extends
 		String name = form.getFirstValue("name");
 		String newname = form.getFirstValue("newname");
 		String isdefault = form.getFirstValue("default");
+		String configFileParameter = form.getFirstValue("config_file");
+		File configFile = (configFileParameter != null) ? new File(
+				configFileParameter) : ConfigOptions.getDefaultPropertyFile();
 
 		if (name == null || newname == null) {
 			this.setStatus(
@@ -145,7 +148,7 @@ public class CopyStoreCommand extends
 		OperationParams params = new ManualOperationParams();
 		params.getContext().put(
 				ConfigOptions.PROPERTIES_FILE_CONTEXT,
-				ConfigOptions.getDefaultPropertyFile());
+				configFile);
 		prepare(params);
 		computeResults(params);
 	}

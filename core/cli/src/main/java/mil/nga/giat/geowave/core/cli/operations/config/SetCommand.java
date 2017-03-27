@@ -57,6 +57,9 @@ public class SetCommand extends
 				entity);
 		String key = form.getFirstValue("key");
 		String value = form.getFirstValue("value");
+		String configFileParameter = form.getFirstValue("config_file");
+		File configFile = (configFileParameter != null) ? new File(
+				configFileParameter) : ConfigOptions.getDefaultPropertyFile();
 		// String key = getQueryValue("key");
 		// String value = getQueryValue("value");
 
@@ -73,7 +76,7 @@ public class SetCommand extends
 		OperationParams params = new ManualOperationParams();
 		params.getContext().put(
 				ConfigOptions.PROPERTIES_FILE_CONTEXT,
-				ConfigOptions.getDefaultPropertyFile());
+				configFile);
 
 		try {
 			return setKeyValue(params);
