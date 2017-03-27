@@ -179,6 +179,10 @@ public class AddStoreCommand extends
 		String type = form.getFirstValue("storetype");
 		String isdefault = form.getFirstValue("default");
 
+		String configFileParameter = form.getFirstValue("config_file");
+		File configFile = (configFileParameter != null) ? new File(
+				configFileParameter) : ConfigOptions.getDefaultPropertyFile();
+
 		if (name == null || type == null) {
 			this.setStatus(
 					Status.CLIENT_ERROR_BAD_REQUEST,
@@ -219,7 +223,7 @@ public class AddStoreCommand extends
 		OperationParams params = new ManualOperationParams();
 		params.getContext().put(
 				ConfigOptions.PROPERTIES_FILE_CONTEXT,
-				ConfigOptions.getDefaultPropertyFile());
+				configFile);
 
 		prepare(params);
 

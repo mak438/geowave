@@ -37,6 +37,8 @@ import java.util.Properties;
 
 public class RestServerTest
 {
+	@Rule
+	public TemporaryFolder tempFolder = new TemporaryFolder();
 
 	@BeforeClass
 	public static void runServer() {
@@ -51,6 +53,8 @@ public class RestServerTest
 			IOException,
 			ParseException {
 
+		File configFile = tempFolder.newFile("test_config");
+
 		// create a new store named "store1", with type "memory"
 		ClientResource resourceAdd = new ClientResource(
 				"http://localhost:5152/geowave/config/addstore");
@@ -64,6 +68,9 @@ public class RestServerTest
 		formAdd.add(
 				"default",
 				"false");
+		formAdd.add(
+				"config_file",
+				configFile.getAbsolutePath());
 		resourceAdd.post(
 				formAdd).write(
 				System.out);
@@ -78,6 +85,9 @@ public class RestServerTest
 		formSet.add(
 				"value",
 				"store2");
+		formSet.add(
+				"config_file",
+				configFile.getAbsolutePath());
 		resourceSet.post(
 				formSet).write(
 				System.out);
@@ -123,6 +133,9 @@ public class RestServerTest
 		formRm.add(
 				"name",
 				"store1");
+		formRm.add(
+				"config_file",
+				configFile.getAbsolutePath());
 		resourceRm.post(
 				formRm).write(
 				System.out);
@@ -133,6 +146,8 @@ public class RestServerTest
 	public void geowave_config_store()
 			throws ResourceException,
 			IOException {
+
+		File configFile = tempFolder.newFile("test_config");
 
 		// create a new store named "store1", with type "memory"
 		ClientResource resourceAdd = new ClientResource(
@@ -147,6 +162,9 @@ public class RestServerTest
 		formAdd.add(
 				"default",
 				"true");
+		formAdd.add(
+				"config_file",
+				configFile.getAbsolutePath());
 		resourceAdd.post(
 				formAdd).write(
 				System.out);
@@ -164,6 +182,9 @@ public class RestServerTest
 		formCp.add(
 				"default",
 				"true");
+		formCp.add(
+				"config_file",
+				configFile.getAbsolutePath());
 		resourceCp.post(
 				formCp).write(
 				System.out);
@@ -175,9 +196,13 @@ public class RestServerTest
 		formRm.add(
 				"name",
 				"store1");
+		formRm.add(
+				"config_file",
+				configFile.getAbsolutePath());
 		resourceRm.post(
 				formRm).write(
 				System.out);
+
 		formRm.remove(0);
 		formRm.add(
 				"name",
