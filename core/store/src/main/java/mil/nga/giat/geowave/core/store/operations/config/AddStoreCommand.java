@@ -1,6 +1,7 @@
 package mil.nga.giat.geowave.core.store.operations.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -22,13 +23,19 @@ import mil.nga.giat.geowave.core.cli.annotations.GeowaveOperation;
 import mil.nga.giat.geowave.core.cli.api.Command;
 import mil.nga.giat.geowave.core.cli.api.DefaultOperation;
 import mil.nga.giat.geowave.core.cli.api.OperationParams;
-//import mil.nga.giat.geowave.core.cli.api.ServerResource;
 import mil.nga.giat.geowave.core.cli.operations.config.ConfigSection;
 import mil.nga.giat.geowave.core.cli.operations.config.options.ConfigOptions;
 import mil.nga.giat.geowave.core.cli.parser.ManualOperationParams;
 import mil.nga.giat.geowave.core.store.GeoWaveStoreFinder;
+import mil.nga.giat.geowave.core.store.StoreFactoryOptions;
 import mil.nga.giat.geowave.core.store.memory.MemoryRequiredOptions;
 import mil.nga.giat.geowave.core.store.memory.MemoryStoreFactoryFamily;
+//import mil.nga.giat.geowave.datastore.hbase.HBaseStoreFactoryFamily;
+//import mil.nga.giat.geowave.datastore.hbase.operations.config.HBaseRequiredOptions;
+//import mil.nga.giat.geowave.datastore.bigtable.BigTableStoreFactoryFamily;
+//import mil.nga.giat.geowave.datastore.bigtable.operations.config.BigTableOptions;
+//import mil.nga.giat.geowave.datastore.accumulo.AccumuloStoreFactoryFamily;
+//import mil.nga.giat.geowave.datastore.accumulo.operations.config.AccumuloRequiredOptions;
 import mil.nga.giat.geowave.core.store.operations.remote.options.DataStorePluginOptions;
 
 @GeowaveOperation(name = "addstore", parentOperation = ConfigSection.class)
@@ -112,9 +119,22 @@ public class AddStoreCommand extends
 
 		File propFile = (File) params.getContext().get(
 				ConfigOptions.PROPERTIES_FILE_CONTEXT);
+		System.out.println("write: " + propFile.canWrite());
+		boolean t = propFile.delete();
+		System.out.println("delete: " + t);
+		try {
+			propFile.createNewFile();
+		}
+		catch (IOException e) {
+
+		}
+		propFile.setWritable(true);
+		System.out.println("write2: " + propFile.canWrite());
+		System.out.println("Path: " + propFile.getAbsolutePath());
 		Properties existingProps = ConfigOptions.loadProperties(
 				propFile,
 				null);
+		System.out.println("existingProps2: " + existingProps);
 
 		// Ensure that a name is chosen.
 		if (parameters.size() != 1) {
@@ -156,21 +176,45 @@ public class AddStoreCommand extends
 		Form form = new Form(
 				entity);
 		String name = form.getFirstValue("name");
+		String type = form.getFirstValue("storetype");
+		String isdefault = form.getFirstValue("default");
 
-		// String name = getQueryValue("name");
-		if (name == null) {
-			this.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		if (name == null || type == null) {
+			this.setStatus(
+					Status.CLIENT_ERROR_BAD_REQUEST,
+					"Requires: name and store type");
 			return;
 		}
 		parameters.add(name);
-		storeType = name;
-		if (getQueryValue("default") != null) {
+		storeType = type;
+		if (isdefault != null && isdefault.equals("true")) {
 			makeDefault = true;
 		}
 
-		GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
-				name,
-				new MemoryStoreFactoryFamily());
+		if (storeType.equals("memory")) {
+			GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
+					storeType,
+					new MemoryStoreFactoryFamily());
+		}
+		// else if (storeType.equals("hbase")) {
+		// GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
+		// storeType,
+		// new HBaseStoreFactoryFamily());
+		// }
+		// else if (storeType.equals("accumulo")) {
+		// GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
+		// storeType,
+		// new AccumuloStoreFactoryFamily());
+		// }
+		// else if (storeType.equals("bigtable")) {
+		// GeoWaveStoreFinder.getRegisteredStoreFactoryFamilies().put(
+		// storeType,
+		// new BigTableStoreFactoryFamily());
+		// }
+		else {
+			this.setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			return;
+		}
 
 		String configFileParameter = form.getFirstValue("config_file");
 		File configFile = (configFileParameter != null) ? new File(
@@ -182,7 +226,18 @@ public class AddStoreCommand extends
 				configFile);
 
 		prepare(params);
-		final MemoryRequiredOptions opts = (MemoryRequiredOptions) pluginOptions.getFactoryOptions();
+
+		// storeType.equals("memory")
+		final StoreFactoryOptions opts = (MemoryRequiredOptions) pluginOptions.getFactoryOptions();
+		// else if (storeType.equals("hbase")) {
+		// opts = (HBaseRequiredOptions) pluginOptions.getFactoryOptions();
+		// }
+		// else if (storeType.equals("accumulo")) {
+		// opts = (AccumuloRequiredOptions) pluginOptions.getFactoryOptions();
+		// }
+		// else { // storeType is "bigtable"
+		// opts = (BigTableOptions) pluginOptions.getFactoryOptions();
+		// }
 		opts.setGeowaveNamespace("namespace");
 		computeResults(params);
 	}

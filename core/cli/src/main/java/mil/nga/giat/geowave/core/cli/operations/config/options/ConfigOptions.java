@@ -244,16 +244,18 @@ public class ConfigOptions
 				}
 			}
 			else {
+				System.out.println("inside else");
 				is = new FileInputStream(
 						configFile);
+				System.out.println("else end");
 			}
-
 			properties.load(is);
 		}
 		catch (final IOException e) {
 			LOGGER.error(
 					"Could not find property cache file: " + configFile,
 					e);
+			System.out.println("inside catch");
 
 			return null;
 		}

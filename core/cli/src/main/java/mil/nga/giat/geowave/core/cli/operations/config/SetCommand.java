@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.shaded.restlet.representation.Representation;
+import org.shaded.restlet.data.Form;
 import org.shaded.restlet.resource.Get;
 import org.shaded.restlet.resource.Post;
 import org.shaded.restlet.data.Status;
@@ -48,10 +50,15 @@ public class SetCommand extends
 	 * @return string containing json with details of success or failure of the
 	 *         set
 	 */
-	@Post("json")
-	public Object computeResults() {
-		String key = getQueryValue("key");
-		String value = getQueryValue("value");
+	@Post("form:json")
+	public Object computeResults(
+			Representation entity ) {
+		Form form = new Form(
+				entity);
+		String key = form.getFirstValue("key");
+		String value = form.getFirstValue("value");
+		// String key = getQueryValue("key");
+		// String value = getQueryValue("value");
 
 		if ((key == null || key.equals("")) || value == null) {
 			this.setStatus(
