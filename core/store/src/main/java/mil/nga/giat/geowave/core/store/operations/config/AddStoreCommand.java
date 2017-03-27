@@ -149,11 +149,12 @@ public class AddStoreCommand extends
 				existingProps);
 	}
 
-	@Post("json")
+	@Post("form:json")
 	public void restPost(
 			Representation entity ) {
 
-		Form form = new Form(entity);
+		Form form = new Form(
+				entity);
 		String name = form.getFirstValue("name");
 
 		// String name = getQueryValue("name");
@@ -171,10 +172,14 @@ public class AddStoreCommand extends
 				name,
 				new MemoryStoreFactoryFamily());
 
+		String configFileParameter = form.getFirstValue("config_file");
+		File configFile = (configFileParameter != null) ? new File(
+				configFileParameter) : ConfigOptions.getDefaultPropertyFile();
+
 		OperationParams params = new ManualOperationParams();
 		params.getContext().put(
 				ConfigOptions.PROPERTIES_FILE_CONTEXT,
-				ConfigOptions.getDefaultPropertyFile());
+				configFile);
 
 		prepare(params);
 		final MemoryRequiredOptions opts = (MemoryRequiredOptions) pluginOptions.getFactoryOptions();

@@ -11,7 +11,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.shaded.restlet.Context;
 import org.restlet.ext.json.JsonRepresentation;
 import org.shaded.restlet.resource.ResourceException;
@@ -34,6 +36,9 @@ import java.util.Properties;
 
 public class RestServerTest
 {
+	@Rule
+	public TemporaryFolder tempFolder = new TemporaryFolder();
+
 	@BeforeClass
 	public static void runServer() {
 		RestServer.main(new String[] {});
@@ -119,14 +124,20 @@ public class RestServerTest
 
 	// Tests geowave/config/addstore
 	@Test
-	public void geowave_config_addstore() {
+	public void geowave_config_addstore()
+			throws IOException {
 		ClientResource resource = new ClientResource(
 				"http://localhost:5152/geowave/config/addstore");
+
+		File configFile = tempFolder.newFile("test_config");
 
 		Form form = new Form();
 		form.add(
 				"name",
 				"memory");
+		form.add(
+				"config_file",
+				configFile.getAbsolutePath());
 		try {
 
 			resource.post(
