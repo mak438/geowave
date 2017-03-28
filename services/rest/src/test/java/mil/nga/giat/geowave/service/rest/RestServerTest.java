@@ -93,35 +93,17 @@ public class RestServerTest
 				System.out);
 
 		// testing list
-		Client client = new Client(
-				Protocol.HTTP);
-		Request request = new Request(
-				Method.GET,
+		ClientResource resourceList = new ClientResource(
 				"http://localhost:5152/geowave/config/list");
-		Response response = client.handle(request);
+		resourceList.addQueryParameter(
+				"config_file",
+				configFile.getAbsolutePath());
+		String text = resourceList.get(
+				MediaType.APPLICATION_JSON).getText();
 
-		assertTrue(
-				"Status is 200",
-				response.getStatus().getCode() == 200);
-		assertTrue(
-				"Has a body",
-				response.isEntityAvailable());
-		assertTrue(
-				"Body is JSON",
-				response.getEntity().getMediaType().equals(
-						MediaType.APPLICATION_JSON));
-
-		String text = response.getEntity().getText();
 		JSONParser parser = new JSONParser();
 		JSONObject obj = (JSONObject) parser.parse(text);
-
-		assertTrue(
-				"JSON can be parsed",
-				obj != null);
 		String name = (String) obj.get("store1");
-		assertTrue(
-				"List contains 'name'",
-				name != null);
 		assertTrue(
 				"'name' is 'value'",
 				name.equals("store2"));
