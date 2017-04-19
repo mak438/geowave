@@ -43,6 +43,10 @@ public class RestServerTest
 
 	@BeforeClass
 	public static void runServer() {
+		// Ensure the config directory exists.
+		File configDirectory = ConfigOptions.getDefaultPropertyPath();
+		if (!configDirectory.exists() && !configDirectory.mkdir()) throw new RuntimeException(
+				"Unable to create directory " + configDirectory);
 		RestServer.main(new String[] {});
 
 	}
